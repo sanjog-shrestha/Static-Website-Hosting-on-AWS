@@ -30,7 +30,8 @@ Amazon S3 Bucket\
 
 Architecture Screenshot:
 
-![Architecture](images/architecture-diagram.png)
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/ed62041c-5f79-4fb5-a683-4e0c66359255" />
+
 
 ------------------------------------------------------------------------
 
@@ -46,23 +47,21 @@ Architecture Screenshot:
 
 AWS Console Screenshot:
 
-![S3 Bucket Console](images/s3-bucket-console.png)
+<img width="1555" height="532" alt="image" src="https://github.com/user-attachments/assets/c4cf0d23-bbb2-4f87-bcee-283a4b41e2b9" />
 
 ------------------------------------------------------------------------
 
 # 📂 Repository Structure
 
 terraform-aws-static-website/
-
-provider.tf\
-variables.tf\
-resource.tf\
-output.tf
-
-index.html\
-error.html
-
-README.md
+│
+├── provider.tf
+├── variables.tf
+├── resource.tf
+├── output.tf
+│
+├── index.html
+├── error.html
 
 ### Structure Explanation
 
@@ -132,7 +131,7 @@ http://your-bucket-name.s3-website-region.amazonaws.com
 
 Deployment Screenshot:
 
-![Terraform Apply Output](images/terraform-apply-output.png)
+<img width="1156" height="483" alt="image" src="https://github.com/user-attachments/assets/8c050609-90dc-490c-b634-efab7e66e700" />
 
 ------------------------------------------------------------------------
 
@@ -146,18 +145,19 @@ Once Terraform completes deployment:
 
 Website Screenshot:
 
-![Website Running](images/website-running.png)
+<img width="1918" height="1017" alt="image" src="https://github.com/user-attachments/assets/272a5f63-af2d-4b2f-9c04-32286df030a6" />
+
 
 ------------------------------------------------------------------------
 
 # 📊 Infrastructure Summary
 
-  Component                     Service Used
-  ----------------------------- --------------
-  Website Hosting               Amazon S3
-  Infrastructure Provisioning   Terraform
-  Authentication                AWS CLI
-  Development Environment       VS Code
+| Component                    | Service Used |
+|------------------------------|--------------|
+| Website Hosting              | Amazon S3    |
+| Infrastructure Provisioning  | Terraform    |
+| Authentication               | AWS CLI      |
+| Development Environment      | VS Code      |
 
 ------------------------------------------------------------------------
 
@@ -200,9 +200,6 @@ Potential enhancements:
 # 📄 Author
 
 **Sanjog Shrestha**\
-DevOps \| Cloud \| Cybersecurity
-
-GitHub: https://github.com/sanjog-shrestha
 
 ------------------------------------------------------------------------
 
