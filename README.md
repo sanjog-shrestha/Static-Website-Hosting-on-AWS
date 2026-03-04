@@ -53,15 +53,15 @@ AWS Console Screenshot:
 
 # 📂 Repository Structure
 
-terraform-aws-static-website/\
-│
-├── provider.tf
-├── variables.tf
-├── resource.tf
-├── output.tf
-│
-├── index.html
-├── error.html
+    terraform-aws-static-website/
+    ├── 
+    ├── provider.tf
+    ├── variables.tf
+    ├── resource.tf
+    ├── output.tf
+    ├── 
+    ├── index.html
+    ├── error.html
 
 ### Structure Explanation
 
