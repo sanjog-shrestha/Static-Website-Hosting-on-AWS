@@ -53,7 +53,7 @@ AWS Console Screenshot:
 
 # 📂 Repository Structure
 
-terraform-aws-static-website/
+terraform-aws-static-website/\
 │
 ├── provider.tf
 ├── variables.tf
