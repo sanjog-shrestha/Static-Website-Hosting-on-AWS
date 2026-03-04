@@ -199,7 +199,7 @@ Potential enhancements:
 
 # 📄 Author
 
-**Sanjog Shrestha**\
+**Sanjog Shrestha**
 
 ------------------------------------------------------------------------
 
