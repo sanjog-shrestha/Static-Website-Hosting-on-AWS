@@ -1,208 +1,243 @@
-# 🌐 Static Website Hosting with Terraform (AWS S3)
+# 🌐 Static Website Hosting with Terraform (AWS S3 + CloudFront)
 
 ## 📌 Overview
 
-This project demonstrates how to deploy a **static website on Amazon Web
-Services (AWS)** using **HashiCorp Terraform Infrastructure as Code
-(IaC)**.
+This project demonstrates how to deploy a **static website on Amazon Web Services (AWS)** using **HashiCorp Terraform Infrastructure as Code (IaC)**.
 
-Terraform provisions and configures the required AWS resources
-automatically, enabling **repeatable and version-controlled
-infrastructure deployments**.
+Terraform provisions and configures the required AWS resources automatically, enabling **repeatable and version-controlled infrastructure deployments**.
 
-The infrastructure includes: - Amazon S3 bucket - Static website hosting
-configuration - Public access policy - Website file uploads
+The infrastructure includes:
+- Amazon S3 bucket (private)
+- Static website hosting configuration
+- CloudFront CDN distribution
+- Origin Access Control (OAC)
+- Bucket policy (CloudFront-only access)
+- Website file uploads
 
-This project highlights **cloud automation, infrastructure modularity,
-and DevOps deployment practices**.
+This project highlights **cloud automation, infrastructure security, CDN integration, and DevOps deployment practices**.
 
-------------------------------------------------------------------------
+---
 
-# 🏗 Architecture
+## 🏗 Architecture
 
-User Browser\
-↓\
-S3 Static Website Endpoint\
-↓\
-Amazon S3 Bucket\
-├── index.html\
+```
+User Browser
+↓ HTTPS
+CloudFront Edge Location (450+ locations worldwide)
+↓ Signed Request (sigv4)
+Private Amazon S3 Bucket
+├── index.html
 └── error.html
+```
 
-Architecture Screenshot:
+> Direct S3 access is blocked. All traffic is routed through CloudFront which enforces HTTPS and caches content globally.
 
-<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/ed62041c-5f79-4fb5-a683-4e0c66359255" />
+![Architecture Diagram](screenshots/architecture.png)
 
+---
 
-------------------------------------------------------------------------
+## ☁ AWS Deployment
 
-# ☁ AWS Deployment
+### Provisioned Resources
 
-## Provisioned Resources
+| # | Resource | Purpose |
+|---|----------|---------|
+| 1 | `aws_s3_bucket` | Stores website files |
+| 2 | `aws_s3_bucket_public_access_block` | Blocks all direct public S3 access |
+| 3 | `aws_s3_bucket_website_configuration` | Configures index and error documents |
+| 4 | `aws_cloudfront_origin_access_control` | Allows CloudFront to securely access private S3 |
+| 5 | `aws_cloudfront_distribution` | CDN with HTTPS, caching, and error handling |
+| 6 | `aws_s3_bucket_policy` | Restricts S3 access to this CloudFront distribution only |
+| 7 | `aws_s3_object` (x2) | Uploads index.html and error.html to S3 |
 
--   S3 Bucket
--   Static Website Hosting Configuration
--   Bucket Public Access Configuration
--   Bucket Policy (Public Read)
--   Website Content Upload
+![S3 Bucket Private Access](screenshots/s3-private-access.png)
 
-AWS Console Screenshot:
+![CloudFront Distribution](screenshots/cloudfront-distribution.png)
 
-<img width="1555" height="532" alt="image" src="https://github.com/user-attachments/assets/c4cf0d23-bbb2-4f87-bcee-283a4b41e2b9" />
+---
 
-------------------------------------------------------------------------
+## 📂 Repository Structure
 
-# 📂 Repository Structure
+```
+terraform-aws-static-website/
+├── screenshots/
+│   ├── architecture.png
+│   ├── s3-private-access.png
+│   ├── cloudfront-distribution.png
+│   ├── terraform-apply.png
+│   ├── website-https.png
+│   └── error-page.png
+├── provider.tf       → AWS provider configuration
+├── variables.tf      → Input variable definitions
+├── resource.tf       → AWS infrastructure resources
+├── output.tf         → Terraform output values
+├── index.html        → Website homepage
+└── error.html        → Custom error page
+```
 
-    terraform-aws-static-website/
-    ├── 
-    ├── provider.tf
-    ├── variables.tf
-    ├── resource.tf
-    ├── output.tf
-    ├── 
-    ├── index.html
-    ├── error.html
+---
 
-### Structure Explanation
+## ⚙ Terraform Design Approach
 
--   **provider.tf** → AWS provider configuration\
--   **variables.tf** → Input variable definitions\
--   **resource.tf** → AWS infrastructure resources\
--   **output.tf** → Terraform output values\
--   **index.html / error.html** → Static website files
+### 1️⃣ Infrastructure as Code
 
-------------------------------------------------------------------------
+Terraform defines all AWS infrastructure declaratively, enabling:
+- Version-controlled infrastructure
+- Repeatable deployments across environments
+- Automated provisioning with zero manual steps
+- Reduced configuration errors
 
-# ⚙ Terraform Design Approach
+### 2️⃣ Private S3 + CloudFront CDN
 
-## 1️⃣ Infrastructure as Code
+Rather than exposing S3 directly, CloudFront acts as the secure entry point:
 
-Terraform is used to define AWS infrastructure declaratively.
+- S3 bucket is **fully private** — no direct public access
+- CloudFront uses **Origin Access Control (OAC)** to fetch files from S3 using signed requests
+- All HTTP traffic is **automatically redirected to HTTPS**
+- Content is **cached at edge locations** for fast global delivery
 
-Benefits include: - Version-controlled infrastructure - Repeatable
-deployments - Automated provisioning - Reduced manual configuration
-errors
+### 3️⃣ Security via Bucket Policy
 
-------------------------------------------------------------------------
+The S3 bucket policy uses a `Condition` block to ensure **only this specific CloudFront distribution** can read objects — preventing any other AWS account's CloudFront from accessing your bucket.
 
-## 2️⃣ Static Website Hosting
+### 4️⃣ Automated Content Deployment
 
-Amazon S3 provides native static website hosting functionality.
+Terraform uploads website files directly to S3 using `aws_s3_object`, ensuring content is deployed automatically alongside infrastructure.
 
-Features used: - index document configuration - error page
-configuration - public access policy
+---
 
-------------------------------------------------------------------------
+## 🚀 Deployment Instructions
 
-## 3️⃣ Automated Content Deployment
+### Prerequisites
+- [Terraform](https://developer.hashicorp.com/terraform/install) installed
+- [AWS CLI](https://aws.amazon.com/cli/) configured with valid credentials
 
-Terraform uploads website files directly to the S3 bucket using the
-**aws_s3_object resource**, ensuring the website content is deployed
-automatically.
-
-------------------------------------------------------------------------
-
-# 🚀 Deployment Instructions
-
-### Initialize Terraform
-
+### Step 1 — Initialize Terraform
+```bash
 terraform init
+```
 
-### Validate Configuration
-
+### Step 2 — Validate Configuration
+```bash
 terraform validate
+```
 
-### Review Execution Plan
-
+### Step 3 — Review Execution Plan
+```bash
 terraform plan
+```
 
-### Apply Infrastructure
-
+### Step 4 — Apply Infrastructure
+```bash
 terraform apply
+```
 
-------------------------------------------------------------------------
+> ⚠️ CloudFront distributions take **10–15 minutes** to propagate globally after creation. This is normal.
 
-# 🔍 Terraform Deployment Output
+---
 
-Example:
+## 🔍 Terraform Deployment Output
 
-website_endpoint =
-http://your-bucket-name.s3-website-region.amazonaws.com
+After `terraform apply` completes you will see:
 
-Deployment Screenshot:
+```bash
+cloudfront_url             = "https://d1234abcdef.cloudfront.net"
+cloudfront_distribution_id = "E1234ABCDEFGH"
+s3_bucket_name             = "your-bucket-name"
+```
 
-<img width="1156" height="483" alt="image" src="https://github.com/user-attachments/assets/8c050609-90dc-490c-b634-efab7e66e700" />
+![Terraform Apply Output](screenshots/terraform-apply.png)
 
-------------------------------------------------------------------------
+---
 
-# 🌐 Website Validation
+## 🌐 Website Validation
 
-Once Terraform completes deployment:
+Once deployment completes and CloudFront has propagated (~15 mins):
 
-1.  Copy the website endpoint URL
-2.  Open it in your browser
-3.  Verify the static website loads successfully
+1. Copy the `cloudfront_url` from the Terraform output
+2. Open it in your browser
+3. Verify the website loads over **HTTPS** — padlock 🔒 should be visible in the address bar
+4. Visit a non-existent page to verify `error.html` loads correctly
 
-Website Screenshot:
+![Live Website HTTPS](screenshots/website-https.png)
 
-<img width="1918" height="1017" alt="image" src="https://github.com/user-attachments/assets/272a5f63-af2d-4b2f-9c04-32286df030a6" />
+![Custom Error Page](screenshots/error-page.png)
 
+---
 
-------------------------------------------------------------------------
+## 🔄 Updating Website Content
 
-# 📊 Infrastructure Summary
+After editing `index.html` or `error.html`, redeploy and invalidate the CloudFront cache:
 
-| Component                    | Service Used |
-|------------------------------|--------------|
-| Website Hosting              | Amazon S3    |
-| Infrastructure Provisioning  | Terraform    |
-| Authentication               | AWS CLI      |
-| Development Environment      | VS Code      |
+```bash
+# Redeploy files to S3
+terraform apply -auto-approve
 
-------------------------------------------------------------------------
+# Clear CloudFront cache so changes appear immediately
+aws cloudfront create-invalidation \
+  --distribution-id $(terraform output -raw cloudfront_distribution_id) \
+  --paths "/*"
+```
 
-# 🧠 Key Concepts Demonstrated
+> Without cache invalidation, visitors may see the old version for up to 1 hour.
 
--   Terraform AWS provider usage
--   Infrastructure as Code principles
--   Static website hosting on S3
--   Terraform resource dependencies
--   Cloud infrastructure automation
--   Public access configuration
+---
 
-------------------------------------------------------------------------
+## 📊 Infrastructure Summary
 
-# 🏁 Project Outcomes
+| Component | Service Used |
+|-----------|-------------|
+| Website Hosting | Amazon S3 (private) |
+| CDN & HTTPS | Amazon CloudFront |
+| Infrastructure Provisioning | Terraform |
+| Authentication | AWS CLI |
+| Development Environment | VS Code |
+
+---
+
+## 🧠 Key Concepts Demonstrated
+
+- Terraform AWS provider usage
+- Infrastructure as Code principles
+- Private S3 static website hosting
+- CloudFront CDN with HTTPS enforcement
+- Origin Access Control (OAC) for secure S3 access
+- Least-privilege bucket policies
+- Cache invalidation workflow
+- Terraform resource dependencies
+
+---
+
+## 🏁 Project Outcomes
 
 This project demonstrates the ability to:
 
--   Deploy cloud infrastructure using Terraform
--   Automate static website hosting on AWS
--   Structure Terraform configurations effectively
--   Implement Infrastructure as Code best practices
--   Manage cloud resources through version-controlled configurations
+- Deploy secure cloud infrastructure using Terraform
+- Implement a production-grade static hosting architecture
+- Configure CloudFront CDN with HTTPS and global caching
+- Apply least-privilege security principles to S3 access
+- Structure Terraform configurations effectively
+- Manage cloud resources through version-controlled configurations
 
-------------------------------------------------------------------------
+---
 
-# 🔮 Future Improvements
+## 🔮 Future Improvements
 
-Potential enhancements:
+- ~~CloudFront CDN integration~~ ✅ Completed
+- Custom domain with Route53
+- HTTPS using AWS Certificate Manager (ACM)
+- CI/CD deployment with GitHub Actions
+- Terraform remote state with S3 + DynamoDB
+- Website monitoring with CloudWatch
 
--   CloudFront CDN integration
--   HTTPS using AWS Certificate Manager
--   Custom domain with Route53
--   CI/CD deployment with GitHub Actions
--   Terraform remote state with S3 + DynamoDB
--   Website monitoring with CloudWatch
+---
 
-------------------------------------------------------------------------
-
-# 📄 Author
+## 📄 Author
 
 **Sanjog Shrestha**
 
-------------------------------------------------------------------------
+---
 
-# 📜 License
+## 📜 License
 
 This project is intended for **educational and portfolio purposes**.
