@@ -32,7 +32,8 @@ Private Amazon S3 Bucket
 
 > Direct S3 access is blocked. All traffic is routed through CloudFront which enforces HTTPS and caches content globally.
 
-![Architecture Diagram](screenshots/architecture.png)
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/a488d752-287a-4bdc-839f-fb0784b8c054" />
+
 
 ---
 
@@ -50,9 +51,9 @@ Private Amazon S3 Bucket
 | 6 | `aws_s3_bucket_policy` | Restricts S3 access to this CloudFront distribution only |
 | 7 | `aws_s3_object` (x2) | Uploads index.html and error.html to S3 |
 
-![S3 Bucket Private Access](screenshots/s3-private-access.png)
+<img width="1477" height="516" alt="image" src="https://github.com/user-attachments/assets/b2880b54-0be4-4409-9019-a821c6f818d4" />
+<img width="1571" height="256" alt="image" src="https://github.com/user-attachments/assets/ced7dd18-561c-4696-a724-f22bf92513c0" />
 
-![CloudFront Distribution](screenshots/cloudfront-distribution.png)
 
 ---
 
@@ -146,7 +147,8 @@ cloudfront_distribution_id = "E1234ABCDEFGH"
 s3_bucket_name             = "your-bucket-name"
 ```
 
-![Terraform Apply Output](screenshots/terraform-apply.png)
+<img width="923" height="163" alt="image" src="https://github.com/user-attachments/assets/336c90c6-c77a-4222-a9db-ae01a815f76a" />
+
 
 ---
 
@@ -159,9 +161,8 @@ Once deployment completes and CloudFront has propagated (~15 mins):
 3. Verify the website loads over **HTTPS** — padlock 🔒 should be visible in the address bar
 4. Visit a non-existent page to verify `error.html` loads correctly
 
-![Live Website HTTPS](screenshots/website-https.png)
-
-![Custom Error Page](screenshots/error-page.png)
+<img width="1918" height="1003" alt="image" src="https://github.com/user-attachments/assets/eeca9c6d-017d-4df0-b323-4107ee1e9880" />
+<img width="1918" height="972" alt="image" src="https://github.com/user-attachments/assets/5e07b495-9935-4c02-9384-b88b84f464fc" />
 
 ---
 
