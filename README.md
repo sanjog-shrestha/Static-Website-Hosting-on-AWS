@@ -1,5 +1,7 @@
 # 🌐 Static Website Hosting with Terraform (AWS S3 + CloudFront)
 
+> This repo includes Terraform for infra + optional GitHub Actions workflow for CI/CD deployment.
+
 ## 📌 Overview
 
 This project demonstrates how to deploy a **static website on Amazon Web Services (AWS)** using **HashiCorp Terraform Infrastructure as Code (IaC)**.

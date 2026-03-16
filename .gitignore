@@ -2,3 +2,6 @@
 .terraform/
 terraform.tfstate
 terraform.tfstate.backup
+
+# Terraform local state and working directory files should not be committed.
+# This keeps credentials/metadata out of git and avoids state drift across machines.
