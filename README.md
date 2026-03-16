@@ -116,8 +116,7 @@ Every push to `main` triggers an automated 7-step pipeline that removes both man
 AWS credentials and the S3 bucket name are stored as GitHub Secrets and injected into the runner as environment variables. The `TF_VAR_bucket_name` secret maps directly to `var.bucket_name` via Terraform's `TF_VAR_*` convention — no changes to `variables.tf` were needed.
 
 > 📸 **GitHub Actions Pipeline Screenshot:**
-<!-- TO ADD: Go to your repository → Actions tab → click the latest Deploy Static Website run → take a screenshot showing all 7 steps passing → upload to GitHub and replace this line with the img tag -->
-> ⚠️ *Replace this line with your GitHub Actions pipeline screenshot after the first successful run*
+<img width="1918" height="780" alt="image" src="https://github.com/user-attachments/assets/ef3a715a-4c4f-4135-9f15-ac36a5f75b11" />
 
 ---
 
